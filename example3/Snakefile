@@ -1,0 +1,35 @@
+# Example 3 — a data pipeline that produces a plot
+#
+# generate (random data) -> plot (PNG). Runs the plotting step as a
+# Snakemake-managed Python script.
+
+rule all:
+    input:
+        "histogram.png",
+
+rule generate:
+    output:
+        "data.csv",
+    run:
+        import numpy as np
+        import pandas as pd
+
+        rng = np.random.default_rng(42)
+        pd.DataFrame({"value": rng.normal(size=1000)}).to_csv(output[0], index=False)
+
+rule plot:
+    input:
+        "data.csv",
+    output:
+        "histogram.png",
+    run:
+        import pandas as pd
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+
+        df = pd.read_csv(input[0])
+        ax = df["value"].plot.hist(bins=30)
+        ax.set_title("Example 3 distribution")
+        plt.savefig(output[0], dpi=120, bbox_inches="tight")

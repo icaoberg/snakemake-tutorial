@@ -1,0 +1,16 @@
+name: snakemake-tutorial
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - python>=3.11
+  - snakemake>=8
+  - snakemake-wrapper-utils
+  - jupyterlab
+  - ipykernel
+  - pandas
+  - numpy
+  - matplotlib
+  - graphviz
+  - pygraphviz

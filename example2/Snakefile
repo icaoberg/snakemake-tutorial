@@ -1,0 +1,23 @@
+# Example 2 — a slightly larger workflow to show a branching DAG
+#
+# Two independent inputs are created, then merged.
+
+SAMPLES = ["a", "b"]
+
+rule all:
+    input:
+        "merged.txt",
+
+rule make_sample:
+    output:
+        "sample_{sample}.txt",
+    shell:
+        "echo 'data for {wildcards.sample}' > {output}"
+
+rule merge:
+    input:
+        expand("sample_{sample}.txt", sample=SAMPLES),
+    output:
+        "merged.txt",
+    shell:
+        "cat {input} > {output}"

@@ -1,0 +1,22 @@
+# Example 1 — a minimal two-rule workflow
+#
+# rule all -> transform -> create
+# Produces greeting.txt and then an upper-cased version.
+
+rule all:
+    input:
+        "shout.txt",
+
+rule create:
+    output:
+        "greeting.txt",
+    shell:
+        "echo 'hello snakemake' > {output}"
+
+rule transform:
+    input:
+        "greeting.txt",
+    output:
+        "shout.txt",
+    shell:
+        "tr '[:lower:]' '[:upper:]' < {input} > {output}"

@@ -1,0 +1,35 @@
+# Example 4 — workflow with report annotations
+#
+# Reuses the plotting pipeline, but marks outputs for inclusion in a
+# self-contained Snakemake HTML report (snakemake --report report.html).
+
+rule all:
+    input:
+        "histogram.png",
+
+rule generate:
+    output:
+        "data.csv",
+    run:
+        import numpy as np
+        import pandas as pd
+
+        rng = np.random.default_rng(7)
+        pd.DataFrame({"value": rng.normal(size=1000)}).to_csv(output[0], index=False)
+
+rule plot:
+    input:
+        "data.csv",
+    output:
+        report("histogram.png", caption="report_caption.rst", category="Figures"),
+    run:
+        import pandas as pd
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+
+        df = pd.read_csv(input[0])
+        ax = df["value"].plot.hist(bins=30)
+        ax.set_title("Example 4 distribution")
+        plt.savefig(output[0], dpi=120, bbox_inches="tight")
