@@ -1,0 +1,15 @@
+# Configuration for exercise3.
+#
+# The parabola  y = a*x^2 + b*x + c
+a: 1
+b: -2
+c: -3
+
+# Range of x values to plot, and how many points to sample.
+xmin: -5
+xmax: 7
+points: 200
+
+# Plot title. Leave it commented out to get the default, "This is a parabola",
+# or set it on the command line:  snakemake --cores 1 --config title="My plot"
+# title: "My parabola"
