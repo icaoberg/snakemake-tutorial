@@ -17,6 +17,7 @@ New to Snakemake? Start with the [Introduction](Introduction.md), which explains
 ├── create.sh            # create the conda environment
 ├── start.sh             # launch JupyterLab in the environment
 ├── clean.sh             # remove the conda environment
+├── images/              # images used in the docs
 ├── examples/            # worked examples, example0–example4
 └── exercises/           # hands-on exercises to try on your own
 ```
@@ -36,13 +37,19 @@ All examples live in the [`examples/`](examples/) directory.
 Each example directory contains:
 
 - `Snakefile` — the workflow definition
+- `README.md` — what the example shows and how to run it
 - `exampleN.ipynb` — a notebook that walks through running and inspecting it (examples 1–4 only)
-- `example0/` has no notebook; instead it includes a `README.md` explaining the annotated `Snakefile` and a `config.yaml` it reads
+- `example0/config.yaml` — the configuration read by the annotated `Snakefile`
 - `example4/report_caption.rst` — the caption shown for the figure in the HTML report
 
 ## Exercises
 
-The [`exercises/`](exercises/) directory is for hands-on exercises that build on the examples.
+The [`exercises/`](exercises/) directory has hands-on exercises that build on the examples. Each one has a `README.md` with instructions and a hidden solution, and a starter `Snakefile` with `TODO`s to fill in.
+
+| Exercise | Topic |
+|---|---|
+| [`exercise1/`](exercises/exercise1/) | Solving quadratic equations |
+| [`exercise3/`](exercises/exercise3/) | Plotting a parabola |
 
 ## Requirements
 

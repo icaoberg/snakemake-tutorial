@@ -1,0 +1,77 @@
+# =============================================================================
+# Exercise 3 — Plotting a parabola
+# =============================================================================
+#
+# Plot the parabola  y = a*x^2 + b*x + c  and save it as results/parabola.png.
+#
+#   config.yaml ─► points (results/points.csv) ─► plot (results/parabola.png) ─► all
+#
+# Inputs:
+#   a, b, c          coefficients, from config.yaml (or --configfile my.yaml)
+#   title            optional plot title (--config title="..."). If it is not
+#                    set, the title is "This is a parabola".
+#
+# Replace every TODO, then run from this directory:
+#
+#   snakemake -n -p --cores 1    # dry run
+#   snakemake --cores 1          # real run
+# =============================================================================
+
+configfile: "config.yaml"
+
+DEFAULT_TITLE = "This is a parabola"
+
+
+rule all:
+    input:
+        "results/parabola.png",
+
+
+# Step 1: sample points (x, y) on the parabola and save them as a CSV file.
+rule points:
+    output:
+        "results/points.csv",
+    params:
+        a=None,  # TODO: read "a" from config
+        b=None,  # TODO: read "b" from config
+        c=None,  # TODO: read "c" from config
+        xmin=config["xmin"],
+        xmax=config["xmax"],
+        n=config["points"],
+    run:
+        import numpy as np
+        import pandas as pd
+
+        x = np.linspace(params.xmin, params.xmax, params.n)
+        y = None  # TODO: a*x^2 + b*x + c, using params.a, params.b, params.c
+        pd.DataFrame({"x": x, "y": y}).to_csv(output[0], index=False)
+
+
+# Step 2: draw the points and save the figure.
+rule plot:
+    input:
+        # TODO: the CSV file written by rule `points`
+    output:
+        "results/parabola.png",
+    params:
+        # TODO: config["title"] if it is set, otherwise DEFAULT_TITLE
+        #       (hint: dictionaries have a .get(key, default) method)
+        title=None,
+        label=f"a={config['a']}, b={config['b']}, c={config['c']}",
+    run:
+        import pandas as pd
+        import matplotlib
+
+        matplotlib.use("Agg")  # draw to a file, no window needed
+        import matplotlib.pyplot as plt
+
+        df = pd.read_csv(input[0])
+        fig, ax = plt.subplots()
+        ax.plot(df["x"], df["y"], label=params.label)
+        ax.axhline(0, color="gray", linewidth=0.8)  # x axis
+        ax.axvline(0, color="gray", linewidth=0.8)  # y axis
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        ax.set_title(params.title)
+        ax.legend()
+        fig.savefig(output[0], dpi=120, bbox_inches="tight")

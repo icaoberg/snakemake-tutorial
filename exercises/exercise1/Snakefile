@@ -1,19 +1,106 @@
-# Exercise 1 — a single rule
+# =============================================================================
+# Exercise 1 — Solving quadratic equations with Snakemake
+# =============================================================================
 #
-# Write ONE rule named `hello` that creates the file `hello.txt`
-# containing the line:
+# For every equation  a*x^2 + b*x + c = 0  listed in config.yaml, compute
 #
-#     Hello, Snakemake!
+#     discriminant   D = b^2 - 4ac
+#     roots          x = (-b ± sqrt(D)) / 2a
 #
-# Replace each TODO below, then run:
+# and collect all the roots into one table, results/summary.tsv.
 #
-#     snakemake --cores 1
+#   coefficients ({equation}) -> discriminant ({equation}) -> roots ({equation})
+#                                                                   |
+#                                                 summary  <--------+  -> all
 #
-# Because this Snakefile has only one rule, Snakemake treats it as the
-# default target, so you don't need a `rule all`.
+# The `coefficients` rule is already done for you as a worked example.
+# Replace every TODO, then run from this directory:
+#
+#   snakemake -n -p --cores 1    # dry run
+#   snakemake --cores 1          # real run
+# =============================================================================
 
-rule hello:
+configfile: "config.yaml"
+
+# Plain Python: the names of all equations, e.g. ["two_real", "one_real", ...]
+EQUATIONS = list(config["equations"])
+
+
+def coefficient(name):
+    """Return a function that looks up coefficient `name` for one equation."""
+    return lambda wildcards: config["equations"][wildcards.equation][name]
+
+
+def fmt(z):
+    """Format a (possibly complex) number: 2, -1+2i, ..."""
+    if z.imag == 0:
+        return f"{z.real:g}"
+    return f"{z.real:g}{z.imag:+g}i"
+
+
+# The first rule is the default target: the final file we want.
+rule all:
+    input:
+        "results/summary.tsv",
+
+
+# Step 1 (DONE): write "a b c" for one equation into data/{equation}.txt
+rule coefficients:
     output:
-        # TODO: the file this rule creates
+        "data/{equation}.txt",
+    params:
+        a=coefficient("a"),
+        b=coefficient("b"),
+        c=coefficient("c"),
     shell:
-        # TODO: a shell command that writes the greeting to {output}
+        "echo '{params.a} {params.b} {params.c}' > {output}"
+
+
+# Step 2: compute the discriminant of one equation.
+rule discriminant:
+    input:
+        # TODO: the coefficients file produced by rule `coefficients`
+    output:
+        # TODO: results/{equation}/discriminant.txt
+    run:
+        with open(input[0]) as f:
+            a, b, c = map(float, f.read().split())
+        d = None  # TODO: b squared minus 4 times a times c
+        with open(output[0], "w") as f:
+            f.write(f"{d:g}\n")
+
+
+# Step 3: compute both roots of one equation.
+rule roots:
+    input:
+        coefficients=None,  # TODO: the coefficients file
+        discriminant=None,  # TODO: the discriminant file from Step 2
+    output:
+        # TODO: results/{equation}/roots.txt
+    run:
+        import cmath  # like math, but sqrt() of a negative number works
+
+        with open(input.coefficients) as f:
+            a, b, c = map(float, f.read().split())
+        with open(input.discriminant) as f:
+            d = float(f.read())
+        x1 = None  # TODO: (-b + cmath.sqrt(d)) / (2 * a)
+        x2 = None  # TODO: (-b - cmath.sqrt(d)) / (2 * a)
+        with open(output[0], "w") as f:
+            f.write(f"{fmt(x1)}\n{fmt(x2)}\n")
+
+
+# Step 4: gather the roots of EVERY equation into one table.
+rule summary:
+    input:
+        # TODO: use expand() to list results/{equation}/roots.txt
+        #       for every name in EQUATIONS
+    output:
+        "results/summary.tsv",
+    run:
+        with open(output[0], "w") as out:
+            out.write("equation\tx1\tx2\n")
+            for equation, path in zip(EQUATIONS, input):
+                with open(path) as f:
+                    x1, x2 = f.read().split()
+                out.write(f"{equation}\t{x1}\t{x2}\n")
