@@ -6,13 +6,11 @@ cd "$(dirname "$0")"
 
 ENV_NAME="snakemake-tutorial"
 
-# Prefer mamba if available (faster solver), fall back to conda.
-if command -v mamba >/dev/null 2>&1; then
-    CONDA="mamba"
-elif command -v conda >/dev/null 2>&1; then
+# Always use conda, even if mamba is installed.
+if command -v conda >/dev/null 2>&1; then
     CONDA="conda"
 else
-    echo "Error: neither mamba nor conda found on PATH." >&2
+    echo "Error: conda not found on PATH." >&2
     exit 1
 fi
 

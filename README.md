@@ -8,6 +8,7 @@ The examples build on each other, from a two-rule "hello world" to a data pipeli
 
 | Example | Topic | What you learn |
 |---|---|---|
+| [`example0/`](example0/) | Anatomy of a Snakefile | A fully commented tour of `configfile`, wildcards, `expand()`, rule directives (`params`, `log`, `benchmark`, `threads`, `resources`, `message`, `shell`/`run`), `temp()`, and event handlers |
 | [`example1/`](example1/) | Run a workflow and render its DAG | Rules, inputs/outputs, `rule all`, dry runs (`-n`), executing a workflow, rendering the job DAG with Graphviz |
 | [`example2/`](example2/) | Branching DAGs, rulegraph and Mermaid | Wildcards, `expand()`, merging multiple samples, comparing `--dag`, `--rulegraph`, and Mermaid output |
 | [`example3/`](example3/) | A data pipeline that produces a plot | Python `run:` blocks, generating data with NumPy/pandas, plotting with matplotlib, why re-running is a no-op when outputs are up to date |
@@ -21,7 +22,7 @@ Each example directory contains:
 
 ## Requirements
 
-- [conda](https://docs.conda.io/) or [mamba](https://mamba.readthedocs.io/) (mamba is used automatically if available)
+- [conda](https://docs.conda.io/), ideally from [Miniforge](https://github.com/conda-forge/miniforge). `create.sh` always uses `conda` to build the environment, even if [mamba](https://mamba.readthedocs.io/) is installed.
 
 All other dependencies, such as Snakemake 8+, JupyterLab, pandas, NumPy, matplotlib, and Graphviz, are listed in [`environment.yaml`](environment.yaml) and installed from `conda-forge` and `bioconda`.
 
@@ -50,7 +51,7 @@ snakemake --cores 1         # run the workflow
 
 | Script | Purpose |
 |---|---|
-| `create.sh` | Creates the `snakemake-tutorial` conda environment from `environment.yaml`. Does nothing if it already exists. |
+| `create.sh` | Creates the `snakemake-tutorial` conda environment from `environment.yaml` using `conda` (never `mamba`). Does nothing if the environment already exists. |
 | `start.sh` | Starts JupyterLab inside the environment. Uses Miniforge's `conda` if a Miniforge install is found (set `MINIFORGE_HOME` to point at a custom location), otherwise the `conda` on your `PATH`. Extra arguments are passed to `jupyter lab`, for example `./start.sh --port 9999`. |
 | `clean.sh` | Removes the `snakemake-tutorial` conda environment. |
 
