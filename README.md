@@ -1,5 +1,7 @@
 # Snakemake Tutorial
 
+![Snakemake](images/snakemake.png)
+
 A hands-on introduction to [Snakemake](https://snakemake.readthedocs.io/), the Python-based workflow management system. The tutorial is a series of small, self-contained examples. Each one pairs a `Snakefile` with a Jupyter notebook that runs the workflow, inspects its results, and visualizes how the steps connect.
 
 The examples build on each other, from a two-rule "hello world" to a data pipeline that produces a plot and an interactive HTML report.
