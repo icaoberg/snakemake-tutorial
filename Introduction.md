@@ -34,12 +34,12 @@ Snakemake helps when an analysis has several steps, many input files, or needs t
 
 | Problem | How Snakemake helps |
 |---|---|
-| Re-running everything after a small change is slow | Only the steps affected by the change are re-run; everything else is reused ([example 3](example3/) shows a re-run doing nothing) |
-| The same steps must be applied to many samples | Wildcards and `expand()` write one rule that runs for every sample ([example 2](example2/)) |
+| Re-running everything after a small change is slow | Only the steps affected by the change are re-run; everything else is reused ([example 3](examples/example3/) shows a re-run doing nothing) |
+| The same steps must be applied to many samples | Wildcards and `expand()` write one rule that runs for every sample ([example 2](examples/example2/)) |
 | Analyses are hard to reproduce months later | The `Snakefile` records every step, and each rule can pin its own conda environment or container |
 | Steps could run in parallel but are run one at a time | `--cores N` runs independent jobs at once on your machine |
 | Work has to move from a laptop to a cluster or the cloud | The same `Snakefile` runs on HPC schedulers such as SLURM, or in the cloud, by changing how it's launched rather than the workflow |
-| It's hard to explain or check what an analysis did | Snakemake can draw the workflow as a graph and build an HTML report with results and provenance ([example 4](example4/)) |
+| It's hard to explain or check what an analysis did | Snakemake can draw the workflow as a graph and build an HTML report with results and provenance ([example 4](examples/example4/)) |
 | A failed run leaves half-written files behind | Snakemake deletes incomplete outputs from failed jobs, so a rerun starts clean |
 
 ## Workflow vs. pipeline
@@ -70,7 +70,7 @@ flowchart LR
     end
 ```
 
-Every pipeline is a workflow, but not every workflow is a pipeline. Real analyses usually start out as pipelines and turn into workflows as soon as there is more than one sample or more than one output. Snakemake handles both the same way. [Example 1](example1/) is a two-step pipeline and [example 2](example2/) is a branching workflow.
+Every pipeline is a workflow, but not every workflow is a pipeline. Real analyses usually start out as pipelines and turn into workflows as soon as there is more than one sample or more than one output. Snakemake handles both the same way. [Example 1](examples/example1/) is a two-step pipeline and [example 2](examples/example2/) is a branching workflow.
 
 ## Why we use DAGs to represent workflows
 
@@ -88,7 +88,7 @@ This structure is a natural fit for a workflow, and drawing it is useful for sev
 4. **It makes the analysis easy to understand and check.** A picture of the graph shows at a glance how results were produced, which helps when explaining a method, reviewing someone else's work, or debugging a step that went wrong.
 5. **It matches how the work actually behaves.** A workflow is a set of dependencies, not a list of commands. A list would hide the branching and merging, but a graph shows it directly.
 
-Snakemake can draw the graph for you in a few ways, which [examples 1](example1/) and [2](example2/) demonstrate:
+Snakemake can draw the graph for you in a few ways, which [examples 1](examples/example1/) and [2](examples/example2/) demonstrate:
 
 ```bash
 snakemake --dag | dot -Tsvg > dag.svg              # every job as its own node
@@ -98,4 +98,4 @@ snakemake --dag --dag-format mermaid               # Mermaid text (Snakemake 8+)
 
 ## Where to go next
 
-Start with [example 0](example0/) for a fully commented tour of a `Snakefile`, then work through examples 1–4 in order. Setup instructions are in the [README](README.md#getting-started).
+Start with [example 0](examples/example0/) for a fully commented tour of a `Snakefile`, then work through examples 1–4 in order. Setup instructions are in the [README](README.md#getting-started).

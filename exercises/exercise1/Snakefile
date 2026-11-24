@@ -1,0 +1,19 @@
+# Exercise 1 — a single rule
+#
+# Write ONE rule named `hello` that creates the file `hello.txt`
+# containing the line:
+#
+#     Hello, Snakemake!
+#
+# Replace each TODO below, then run:
+#
+#     snakemake --cores 1
+#
+# Because this Snakefile has only one rule, Snakemake treats it as the
+# default target, so you don't need a `rule all`.
+
+rule hello:
+    output:
+        # TODO: the file this rule creates
+    shell:
+        # TODO: a shell command that writes the greeting to {output}
