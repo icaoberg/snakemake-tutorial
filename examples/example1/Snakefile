@@ -11,7 +11,7 @@ rule create:
     output:
         "greeting.txt",
     shell:
-        "echo 'hello snakemake' > {output}"
+        "echo 'hello river' > {output}"
 
 rule transform:
     input:

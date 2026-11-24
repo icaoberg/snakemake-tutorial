@@ -3,9 +3,9 @@
 # generate (random data) -> plot (PNG). Runs the plotting step as a
 # Snakemake-managed Python script.
 
-rule all:
+rule leaf:
     input:
-        "histogram.png",
+        "river.png",
 
 rule generate:
     output:
@@ -21,7 +21,7 @@ rule plot:
     input:
         "data.csv",
     output:
-        "histogram.png",
+        "river.png",
     run:
         import pandas as pd
         import matplotlib
