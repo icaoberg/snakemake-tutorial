@@ -11,7 +11,7 @@ generate (data.csv) ─► plot (river.png) ─► leaf
 ## Run it
 
 ```bash
-conda activate snakemake
+conda activate snakemake-tutorial
 cd examples/example3
 snakemake -n -p --cores 1
 snakemake --cores 1

@@ -39,10 +39,10 @@ make_sample (gamma) ─► count_words (gamma) ─┘
 
 ## Running it
 
-From the repository root, inside the `snakemake` environment (see the [top-level README](../../README.md)):
+From the repository root, inside the `snakemake-tutorial` environment (see the [top-level README](../../README.md)):
 
 ```bash
-conda activate snakemake
+conda activate snakemake-tutorial
 cd examples/example0
 
 snakemake -n -p --cores 1     # dry run: show the jobs and commands, run nothing

@@ -40,7 +40,7 @@ config.yaml ─► coefficients ─► discriminant ─► roots ─┐
 3. Do a dry run, then look at the plan:
 
    ```bash
-   conda activate snakemake
+   conda activate snakemake-tutorial
    cd exercises/exercise1
    snakemake -n -p --cores 1
    ```

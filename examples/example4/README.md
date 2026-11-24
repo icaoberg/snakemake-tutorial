@@ -16,7 +16,7 @@ output:
 ## Run it
 
 ```bash
-conda activate snakemake
+conda activate snakemake-tutorial
 cd examples/example4
 snakemake --cores 1
 snakemake --report report.html    # a single self-contained HTML file

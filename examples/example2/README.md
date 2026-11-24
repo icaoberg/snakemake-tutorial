@@ -15,7 +15,7 @@ make_sample (b) ─┘
 ## Run it
 
 ```bash
-conda activate snakemake
+conda activate snakemake-tutorial
 cd examples/example2
 snakemake -n -p --cores 1
 snakemake --cores 2

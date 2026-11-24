@@ -5,7 +5,7 @@ Hands-on exercises for practicing what the [examples](../examples/) cover. Work 
 Set up the environment as described in the [top-level README](../README.md#getting-started), then activate it:
 
 ```bash
-conda activate snakemake
+conda activate snakemake-tutorial
 ```
 
 | Exercise | Topic | What you practice |

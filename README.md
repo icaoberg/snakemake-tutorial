@@ -60,19 +60,19 @@ All other dependencies, such as Snakemake 8+, JupyterLab, pandas, NumPy, matplot
 ## Getting started
 
 ```bash
-# 1. Create the conda environment (named "snakemake")
+# 1. Create the conda environment (named "snakemake-tutorial")
 ./create.sh
 
 # 2. Launch JupyterLab inside that environment
 ./start.sh
 ```
 
-Then open any `examples/exampleN/exampleN.ipynb` and make sure its kernel is the `snakemake` environment. Work through the examples in order.
+Then open any `examples/exampleN/exampleN.ipynb` and make sure its kernel is the `snakemake-tutorial` environment. Work through the examples in order.
 
 To run a workflow without the notebook:
 
 ```bash
-conda activate snakemake
+conda activate snakemake-tutorial
 cd examples/example1
 snakemake -n -p --cores 1   # dry run: show what would be executed
 snakemake --cores 1         # run the workflow
@@ -82,8 +82,8 @@ snakemake --cores 1         # run the workflow
 
 | Script | Purpose |
 |---|---|
-| `create.sh` | Creates the `snakemake` conda environment from `environment.yaml` using `conda` (never `mamba`). Does nothing if the environment already exists. |
+| `create.sh` | Creates the `snakemake-tutorial` conda environment from `environment.yaml` using `conda` (never `mamba`). Does nothing if the environment already exists. |
 | `start.sh` | Starts JupyterLab inside the environment. Uses Miniforge's `conda` if a Miniforge install is found (set `MINIFORGE_HOME` to point at a custom location), otherwise the `conda` on your `PATH`. Extra arguments are passed to `jupyter lab`, for example `./start.sh --port 9999`. |
-| `clean.sh` | Removes the `snakemake` conda environment. |
+| `clean.sh` | Removes the `snakemake-tutorial` conda environment. |
 
 To rebuild the environment from scratch, run `./clean.sh && ./create.sh`.

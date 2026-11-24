@@ -13,7 +13,7 @@ create (greeting.txt) ─► transform (shout.txt) ─► all
 ## Run it
 
 ```bash
-conda activate snakemake
+conda activate snakemake-tutorial
 cd examples/example1
 snakemake -n -p --cores 1                  # dry run: show the plan and commands
 snakemake --cores 1                        # run it

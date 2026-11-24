@@ -30,7 +30,7 @@ config.yaml ─► points ─► plot ─► all
 2. Dry run, then run:
 
    ```bash
-   conda activate snakemake
+   conda activate snakemake-tutorial
    cd exercises/exercise3
    snakemake -n -p --cores 1
    snakemake --cores 1
