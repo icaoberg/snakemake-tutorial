@@ -1,0 +1,176 @@
+# =============================================================================
+# Example 0 — Anatomy of a Snakefile
+# =============================================================================
+#
+# This workflow is deliberately small. Its job is to show, in one place, the
+# building blocks you will meet in every Snakefile:
+#
+#   1. Configuration           configfile: / config[...]
+#   2. Plain Python            variables and helper functions
+#   3. Global wildcard rules   wildcard_constraints:
+#   4. The target rule         rule all
+#   5. Rules and directives    input, output, params, log, benchmark,
+#                              threads, resources, message, shell / run
+#   6. Wildcards and expand()  {sample}, expand(...)
+#   7. Output flags            temp(...)
+#   8. Event handlers          onstart / onsuccess / onerror
+#
+# Pipeline (one branch per sample, then merged):
+#
+#   make_sample ({sample}) -> count_words ({sample}) -> summarize -> all
+#
+# Run it from this directory:
+#
+#   snakemake -n -p --cores 1    # dry run: print the plan and the commands
+#   snakemake --cores 1          # actually run it
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# 1. Configuration
+# -----------------------------------------------------------------------------
+# `configfile:` reads a YAML (or JSON) file into the global dictionary `config`.
+# Keeping parameters outside the Snakefile lets you change *what* is run
+# without editing *how* it is run. Any key can be overridden at the command
+# line, e.g.:  snakemake --cores 1 --config greeting="hi there"
+configfile: "config.yaml"
+
+
+# -----------------------------------------------------------------------------
+# 2. Plain Python
+# -----------------------------------------------------------------------------
+# A Snakefile is a superset of Python. Anything outside a rule is ordinary
+# Python that runs once, when Snakemake parses the file. Use it to define
+# lists, read sample sheets, or write helper functions.
+SAMPLES = config["samples"]
+
+
+def greeting_for(wildcards):
+    """Input/params functions receive the job's wildcards as an argument.
+
+    Here we build a per-sample message. Functions like this are evaluated
+    lazily, once per job, so they can depend on the wildcard values.
+    """
+    return f"{config['greeting']} ({wildcards.sample})"
+
+
+# -----------------------------------------------------------------------------
+# 3. Global wildcard constraints
+# -----------------------------------------------------------------------------
+# Wildcards match greedily by default (regex ".+"). Constraining them avoids
+# ambiguous matches, e.g. stops {sample} from swallowing a "/" or a ".".
+wildcard_constraints:
+    sample="[A-Za-z0-9]+",
+
+
+# -----------------------------------------------------------------------------
+# 4. The target rule
+# -----------------------------------------------------------------------------
+# Snakemake works *backwards* from the files you ask for. With no target on
+# the command line it builds the FIRST rule in the file, so by convention that
+# rule is called `all` and only lists the final outputs. It has no output or
+# command of its own.
+rule all:
+    input:
+        "results/summary.txt",
+
+
+# -----------------------------------------------------------------------------
+# 5–7. Rules, directives, wildcards and output flags
+# -----------------------------------------------------------------------------
+
+# Step 1: create one small text file per sample.
+rule make_sample:
+    # output: the file(s) this rule promises to produce. "{sample}" is a
+    # wildcard: Snakemake infers its value from whichever file is requested,
+    # e.g. asking for data/alpha.txt sets sample="alpha".
+    #
+    # temp(...) marks the file as intermediate: Snakemake deletes it
+    # automatically once every rule that needs it has finished.
+    output:
+        temp("data/{sample}.txt"),
+    # params: non-file values passed to the command (strings, numbers,
+    # flags). A function (like greeting_for) is called with the wildcards of
+    # each job. Snakemake records params, so changing one (for example with
+    # --config greeting="hi") makes the affected jobs re-run.
+    params:
+        text=greeting_for,
+    # log: where this job's messages should go. Snakemake creates the
+    # directory for you and keeps logs even if the job fails.
+    log:
+        "logs/make_sample/{sample}.log",
+    # message: a human-readable line printed when the job starts.
+    message:
+        "Creating sample file for {wildcards.sample}"
+    # shell: the command to run. Placeholders in {braces} are filled in from
+    # the directives above: {output}, {params.text}, {log}, {wildcards.sample}.
+    shell:
+        "echo '{params.text}' > {output} 2> {log}"
+
+
+# Step 2: count the words in each sample file.
+rule count_words:
+    # input: the file(s) this rule needs. Using the same {sample} wildcard
+    # links this rule to make_sample's output, which is how Snakemake builds
+    # the dependency graph (DAG). No explicit "run X after Y" is needed.
+    input:
+        "data/{sample}.txt",
+    output:
+        "results/counts/{sample}.txt",
+    log:
+        "logs/count_words/{sample}.log",
+    # benchmark: records wall-clock time, memory, and I/O for the job in a
+    # tab-separated file. Handy for profiling a real pipeline.
+    benchmark:
+        "benchmarks/count_words/{sample}.tsv"
+    # threads: how many CPU cores one job may use. Snakemake will not run more
+    # threads at once than the --cores you give it. Available as {threads}.
+    threads: 1
+    # resources: arbitrary named limits (memory, GPUs, API quotas...). Used by
+    # the scheduler and by cluster/cloud executors. Available as {resources.X}.
+    resources:
+        mem_mb=100,
+    message:
+        "Counting words in {input} using {threads} thread(s) and {resources.mem_mb} MB"
+    shell:
+        "wc -w < {input} | tr -d ' ' > {output} 2> {log}"
+
+
+# Step 3: merge every per-sample count into one summary.
+rule summarize:
+    # expand() fills a pattern with every value in a list, producing a plain
+    # list of file names:
+    #   ["results/counts/alpha.txt", "results/counts/beta.txt", ...]
+    # This is how a rule waits for *all* samples (a "gather" step).
+    input:
+        expand("results/counts/{sample}.txt", sample=SAMPLES),
+    output:
+        "results/summary.txt",
+    log:
+        "logs/summarize.log",
+    # run: instead of a shell command, run a block of Python. Inside it,
+    # `input`, `output`, `params`, `log`, `wildcards` and `threads` are
+    # Python objects (not strings), so you can iterate over them.
+    run:
+        with open(output[0], "w") as out, open(log[0], "w") as logfile:
+            out.write("sample\twords\n")
+            for sample, path in zip(SAMPLES, input):
+                with open(path) as f:
+                    count = f.read().strip()
+                out.write(f"{sample}\t{count}\n")
+                logfile.write(f"read {path}\n")
+
+
+# -----------------------------------------------------------------------------
+# 8. Event handlers
+# -----------------------------------------------------------------------------
+# Optional Python blocks that run at the start of the workflow, after it
+# succeeds, or if any job fails. Useful for notifications or cleanup.
+onstart:
+    print(f"Starting example0 with samples: {', '.join(SAMPLES)}")
+
+onsuccess:
+    print("Workflow finished. See results/summary.txt")
+
+onerror:
+    print("Workflow failed. Check the files in logs/ for details.")

@@ -1,0 +1,14 @@
+# Configuration for example0.
+#
+# Values here are loaded by the `configfile:` directive in the Snakefile and
+# exposed as the Python dictionary `config`. Change them here (or override
+# them on the command line with `--config`) without touching the workflow.
+
+# The samples to process. Each name becomes a value of the {sample} wildcard.
+samples:
+  - alpha
+  - beta
+  - gamma
+
+# Text written into every generated sample file.
+greeting: "hello from snakemake"
