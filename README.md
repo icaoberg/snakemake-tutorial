@@ -4,6 +4,8 @@ A hands-on introduction to [Snakemake](https://snakemake.readthedocs.io/), the P
 
 The examples build on each other, from a two-rule "hello world" to a data pipeline that produces a plot and an interactive HTML report.
 
+New to Snakemake? Start with the [Introduction](Introduction.md), which explains what Snakemake does, how workflows differ from pipelines, and why workflows are drawn as DAGs.
+
 ## Examples
 
 | Example | Topic | What you learn |
@@ -17,7 +19,8 @@ The examples build on each other, from a two-rule "hello world" to a data pipeli
 Each example directory contains:
 
 - `Snakefile` — the workflow definition
-- `exampleN.ipynb` — a notebook that walks through running and inspecting it
+- `exampleN.ipynb` — a notebook that walks through running and inspecting it (examples 1–4 only)
+- `example0/` has no notebook; instead it includes a `README.md` explaining the annotated `Snakefile` and a `config.yaml` it reads
 - `example4/report_caption.rst` — the caption shown for the figure in the HTML report
 
 ## Requirements
