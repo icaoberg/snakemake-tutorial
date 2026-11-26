@@ -4,6 +4,10 @@
 generate (data.csv) ─► plot (river.png) ─► leaf
 ```
 
+![Job DAG for example 3](../../images/example3-dag.png)
+
+*The job DAG, drawn with `snakemake --dag | dot -Tpng`.*
+
 - `generate` uses a Python `run:` block to draw 1,000 random numbers with NumPy (fixed seed 42) and save them with pandas.
 - `plot` draws their histogram with matplotlib and saves `river.png`.
 - The target rule is called `leaf` instead of `all`. Snakemake doesn't care about the name; the first rule in the file is the default target.

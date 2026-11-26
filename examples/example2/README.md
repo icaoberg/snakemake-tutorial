@@ -8,6 +8,10 @@ make_sample (a) ─┐
 make_sample (b) ─┘
 ```
 
+![Job DAG for example 2](../../images/example2-dag.png)
+
+*The job DAG, drawn with `snakemake --dag | dot -Tpng`.*
+
 - `make_sample` uses the wildcard `{sample}`: one rule, one job per sample (`sample_a.txt`, `sample_b.txt`).
 - `merge` uses `expand("sample_{sample}.txt", sample=SAMPLES)` to wait for every sample.
 - The two `make_sample` jobs don't depend on each other, so with `--cores 2` they can run in parallel.

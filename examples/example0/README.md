@@ -16,6 +16,10 @@ make_sample (beta)  ─► count_words (beta)  ─┼─► summarize ─► all
 make_sample (gamma) ─► count_words (gamma) ─┘
 ```
 
+![Job DAG for example 0](../../images/example0-dag.png)
+
+*The job DAG, drawn with `snakemake --dag | dot -Tpng`.*
+
 ## Components covered
 
 | Component | Where in the Snakefile | What it does |

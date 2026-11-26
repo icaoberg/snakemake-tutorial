@@ -6,13 +6,13 @@ A hands-on introduction to [Snakemake](https://snakemake.readthedocs.io/), the P
 
 The examples build on each other, from a two-rule "hello world" to a data pipeline that produces a plot and an interactive HTML report.
 
-New to Snakemake? Start with the [Introduction](Introduction.md), which explains what Snakemake does, how workflows differ from pipelines, and why workflows are drawn as DAGs.
+New to Snakemake? Start with the [Introduction](INTRODUCTION.md), which explains what Snakemake does, how workflows differ from pipelines, and why workflows are drawn as DAGs.
 
 ## Repository layout
 
 ```
 .
-├── Introduction.md      # concepts: what Snakemake does, workflows vs. pipelines, DAGs
+├── INTRODUCTION.md      # concepts: what Snakemake does, workflows vs. pipelines, DAGs
 ├── environment.yaml     # conda environment definition
 ├── create.sh            # create the conda environment
 ├── start.sh             # launch JupyterLab in the environment

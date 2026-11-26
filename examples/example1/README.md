@@ -6,6 +6,10 @@ A minimal two-rule workflow:
 create (greeting.txt) ─► transform (shout.txt) ─► all
 ```
 
+![Job DAG for example 1](../../images/example1-dag.png)
+
+*The job DAG, drawn with `snakemake --dag | dot -Tpng`.*
+
 - `create` writes `hello river` to `greeting.txt`.
 - `transform` upper-cases it into `shout.txt`.
 - `all` is the first rule, so it is the default target. It asks for `shout.txt`, and Snakemake works backwards to figure out that `create` must run first.

@@ -6,6 +6,10 @@ The same data-and-plot pipeline as [example 3](../example3/), with the figure ma
 generate (data.csv) ─► plot (histogram.png) ─► all
 ```
 
+![Job DAG for example 4](../../images/example4-dag.png)
+
+*The job DAG, drawn with `snakemake --dag | dot -Tpng`.*
+
 ```python
 output:
     report("histogram.png", caption="report_caption.rst", category="Figures"),
